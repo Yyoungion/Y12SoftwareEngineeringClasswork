@@ -1,0 +1,88 @@
+<!--
+ACTIVITY: Broken Authentication and Session Management
+
+WHAT THIS ACTIVITY IS ABOUT:
+This activity shows why login systems should not trust
+information stored in the browser.
+
+Anything stored in localStorage can be changed by the user.
+
+WHAT YOU WILL DO:
+You will log in,
+then bypass the login without the password,
+then improve the code to reduce the risk.
+-->
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Login</h2>
+
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+<button onclick="handleLogin()">Login</button>
+
+<script>
+function handleLogin() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    login(username, password);
+}
+
+function login(username, password) {
+
+    if (username === "admin" && password === "1234") {
+
+        // Generate a random session token
+        const token = crypto.randomUUID(); 
+        // If crypto.randomUUID() isn't supported, you can use:
+        // const token = Math.random().toString(36).substring(2);
+
+        sessionStorage.setItem("loggedIn", token);
+
+        alert("Logged in!");
+        location.reload();
+    }
+}
+
+
+// STEP 3:
+// This code runs EVERY time the page loads.
+//
+// It checks localStorage to decide if the user is logged in.
+// The browser does not know if this value is trustworthy.
+if (localStorage.getItem("loggedIn")) {
+
+    // STEP 4:
+    // If loggedIn exists, the user is shown protected content.
+    // This means a user can log in WITHOUT a password.
+    document.body.innerHTML = "<h1>Welcome Admin</h1>";
+}
+
+/*
+YOUR TASK:
+
+1. Open Developer Tools.
+2. Go to Application → Local Storage.
+3. Add:
+   loggedIn = true
+4. Refresh the page.
+5. Observe what happens.
+
+WHY THIS IS A PROBLEM:
+The website trusts the browser instead of the server.
+
+IMPROVEMENT TASK:
+- Replace localStorage with sessionStorage
+- Store a random session token instead of true
+- Check for the token instead of a boolean value
+
+WHY THIS HELPS:
+- sessionStorage clears when the browser closes
+- Random values are harder to guess or fake
+*/
+</script>
+
+</body>
+</html>
